@@ -42,3 +42,6 @@
 
 # Ignore keep files
 .keep
+
+# Ignore swp files
+.swp
