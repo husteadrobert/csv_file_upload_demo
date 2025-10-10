@@ -49,7 +49,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_10_10_122830) do
     t.string "name", null: false
     t.string "address"
     t.string "structure_type", null: false
-    t.integer "room_number"
+    t.integer "room_number" # TODO Maybe this should be string? Never will do math to it
     t.decimal "size", precision: 10, scale: 2
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

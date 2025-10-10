@@ -6,6 +6,7 @@ class BuildingCsvImportJob < ApplicationJob
   def perform(building_csv_file_id)
     # TODO Update building_csv_file to track status of update, if it's been run, etc
     # TODO Destroy model/file if memory is an issue
+    # TODO For Production/Staging, need to use Redis or solid_queue, etc
     building_csv_file = BuildingCsvFile.find(building_csv_file_id)
 
     building_csv_file.file.open do |file|
@@ -16,7 +17,7 @@ class BuildingCsvImportJob < ApplicationJob
             name: row[BuildingCsvFile::COLUMN_NAME],
             address: row[BuildingCsvFile::COLUMN_ADDRESS],
             structure_type: row[BuildingCsvFile::COLUMN_STRUCTURE_TYPE],
-            # TODO What do if ROOM_NUMBER is present even though it's a house?
+            # TODO What do if ROOM_NUMBER is present even though it's a house? Ignoring for now but need to check
             room_number: row[BuildingCsvFile::COLUMN_ROOM_NUMBER],
             rent_amount: row[BuildingCsvFile::COLUMN_RENT_AMOUNT],
             size: row[BuildingCsvFile::COLUMN_SIZE]
