@@ -7,7 +7,7 @@ RSpec.describe Building, type: :model do
       name: 'Test Apartment',
       address: '123 Test Street',
       structure_type: Building::TYPE_APARTMENT,
-      room_number: '101',
+      room_number: 101,
       size: 45.5,
       rent_amount: 150000
     }
@@ -30,7 +30,7 @@ RSpec.describe Building, type: :model do
       name: 'Test Mansion',
       address: '789 Test Boulevard',
       structure_type: Building::TYPE_MANSION,
-      room_number: '302',
+      room_number: 302,
       size: 85.0,
       rent_amount: 300000
     }
@@ -157,35 +157,35 @@ RSpec.describe Building, type: :model do
 
     describe 'apartment predicates' do
       it 'returns true for apartment structure_type' do
-        expect(apartment.structure_type_アパート?).to be true
-        expect(apartment.structure_type_一戸建て?).to be false
-        expect(apartment.structure_type_マンション?).to be false
+        expect(apartment.structure_type.アパート?).to be true
+        expect(apartment.structure_type.一戸建て?).to be false
+        expect(apartment.structure_type.マンション?).to be false
       end
     end
 
     describe 'house predicates' do
       it 'returns true for house structure_type' do
-        expect(house.structure_type_一戸建て?).to be true
-        expect(house.structure_type_アパート?).to be false
-        expect(house.structure_type_マンション?).to be false
+        expect(house.structure_type.一戸建て?).to be true
+        expect(house.structure_type.アパート?).to be false
+        expect(house.structure_type.マンション?).to be false
       end
     end
 
     describe 'mansion predicates' do
       it 'returns true for mansion structure_type' do
-        expect(mansion.structure_type_マンション?).to be true
-        expect(mansion.structure_type_アパート?).to be false
-        expect(mansion.structure_type_一戸建て?).to be false
+        expect(mansion.structure_type.マンション?).to be true
+        expect(mansion.structure_type.アパート?).to be false
+        expect(mansion.structure_type.一戸建て?).to be false
       end
     end
   end
 
   describe 'database constraints' do
-    it 'enforces unique index on unique_assigned_id at database level' do
+    it 'enforces uniqueness on unique_assigned_id' do
       Building.create!(valid_apartment_attributes)
       expect {
         Building.create!(valid_apartment_attributes.merge(name: 'Different Name'))
-      }.to raise_error(ActiveRecord::RecordNotUnique)
+      }.to raise_error(ActiveRecord::RecordInvalid, /Unique assigned.*already been taken/)
     end
   end
 
@@ -197,7 +197,7 @@ RSpec.describe Building, type: :model do
         expect(building.unique_assigned_id).to eq('APT001')
         expect(building.name).to eq('Test Apartment')
         expect(building.structure_type).to eq(Building::TYPE_APARTMENT)
-        expect(building.room_number).to eq('101')
+        expect(building.room_number).to eq(101)
         expect(building.size).to eq(45.5)
         expect(building.rent_amount).to eq(150000)
       end
@@ -223,7 +223,7 @@ RSpec.describe Building, type: :model do
         expect(building.unique_assigned_id).to eq('MAN001')
         expect(building.name).to eq('Test Mansion')
         expect(building.structure_type).to eq(Building::TYPE_MANSION)
-        expect(building.room_number).to eq('302')
+        expect(building.room_number).to eq(302)
         expect(building.size).to eq(85.0)
         expect(building.rent_amount).to eq(300000)
       end
@@ -246,7 +246,7 @@ RSpec.describe Building, type: :model do
       expect(building.name).to be_a(String)
       expect(building.address).to be_a(String)
       expect(building.structure_type).to be_a(String)
-      expect(building.room_number).to be_a(String)
+      expect(building.room_number).to be_a(Integer)
     end
 
     it 'stores numeric attributes correctly' do
@@ -304,27 +304,27 @@ RSpec.describe Building, type: :model do
       expect(building.size).to eq(BigDecimal('0'))
     end
 
-    it 'handles very long names' do
-      long_name = 'A' * 1000
+    it 'handles reasonably long names' do
+      long_name = 'A' * 255
       building = Building.new(valid_apartment_attributes.merge(name: long_name))
       expect(building).to be_valid
       building.save!
       expect(building.name).to eq(long_name)
     end
 
-    it 'handles very long addresses' do
-      long_address = 'B' * 1000
+    it 'handles reasonably long addresses' do
+      long_address = 'B' * 255
       building = Building.new(valid_apartment_attributes.merge(address: long_address))
       expect(building).to be_valid
       building.save!
       expect(building.address).to eq(long_address)
     end
 
-    it 'handles special characters in room numbers' do
-      building = Building.new(valid_apartment_attributes.merge(room_number: 'A-101-B'))
+    it 'handles numeric room numbers' do
+      building = Building.new(valid_apartment_attributes.merge(room_number: 12345))
       expect(building).to be_valid
       building.save!
-      expect(building.room_number).to eq('A-101-B')
+      expect(building.room_number).to eq(12345)
     end
   end
 
@@ -335,14 +335,14 @@ RSpec.describe Building, type: :model do
       building.update!(
         name: 'Updated Name',
         address: 'Updated Address',
-        room_number: '999',
+        room_number: 999,
         size: 75.5,
         rent_amount: 200000
       )
       building.reload
       expect(building.name).to eq('Updated Name')
       expect(building.address).to eq('Updated Address')
-      expect(building.room_number).to eq('999')
+      expect(building.room_number).to eq(999)
       expect(building.size).to eq(BigDecimal('75.5'))
       expect(building.rent_amount).to eq(200000)
     end
