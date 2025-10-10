@@ -1,0 +1,20 @@
+<h1>Upload CSV File</h1>
+
+<%= form_with url: buildings_path, method: :post, local: true, html: { multipart: true }, data: { turbo: false } do |form| %>
+  <div class="field">
+    <%= form.label :csv_file, "Select CSV File" %>
+    <%= form.file_field :csv_file, accept: ".csv" %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit "Upload", class: "btn btn-primary" %>
+    <%= link_to "Cancel", buildings_path, class: "btn btn-secondary" %>
+  </div>
+<% end %>
+
+<h3>CSV Format Requirements:</h3>
+<ul>
+  <li>Headers: unique_id, name, address, type, room_number, size</li>
+  <li>Type must be one of: アパート, 一戸建て, マンション</li>
+  <li>Room number is required for アパート and マンション</li>
+</ul>
