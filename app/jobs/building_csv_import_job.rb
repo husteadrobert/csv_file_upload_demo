@@ -18,6 +18,7 @@ class BuildingCsvImportJob < ApplicationJob
             structure_type: row[BuildingCsvFile::COLUMN_STRUCTURE_TYPE],
             # TODO What do if ROOM_NUMBER is present even though it's a house?
             room_number: row[BuildingCsvFile::COLUMN_ROOM_NUMBER],
+            rent_amount: row[BuildingCsvFile::COLUMN_RENT_AMOUNT],
             size: row[BuildingCsvFile::COLUMN_SIZE]
           )
         rescue => e

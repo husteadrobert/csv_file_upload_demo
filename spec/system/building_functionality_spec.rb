@@ -6,6 +6,7 @@ RSpec.describe "Building functionality", type: :system do
       unique_assigned_id: "BLD001",
       name: "Test Apartment",
       address: "123 Test Street",
+      rent_amount: 1234567,
       structure_type: Building::TYPE_APARTMENT,
       room_number: "101",
       size: 45.5
@@ -31,6 +32,7 @@ RSpec.describe "Building functionality", type: :system do
       expect(page).to have_text("123 Test Street")
       expect(page).to have_text("アパート")
       expect(page).to have_text("101")
+      expect(page).to have_text("1234567")
       expect(page).to have_text("45.5")
     end
 

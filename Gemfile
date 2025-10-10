@@ -29,6 +29,9 @@ gem "jbuilder"
 # Enumerated attributes with I18n and ActiveRecord/Mongoid support
 gem "enumerize"
 
+# Pagination
+gem "kaminari"
+
 # Use Redis adapter to run Action Cable in production
 # gem "redis", ">= 4.0.1"
 
