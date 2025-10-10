@@ -1,0 +1,28 @@
+<h1>Buildings</h1>
+
+<%= link_to "Upload CSV", upload_csv_buildings_path, class: "btn btn-primary" %>
+
+<table>
+  <thead>
+    <tr>
+      <th>Unique ID</th>
+      <th>Name</th>
+      <th>Address</th>
+      <th>Type</th>
+      <th>Room Number</th>
+      <th>Size</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @buildings.each do |building| %>
+      <tr>
+        <td><%= building.unique_assigned_id %></td>
+        <td><%= building.name %></td>
+        <td><%= building.address %></td>
+        <td><%= building.structure_type %></td>
+        <td><%= building.room_number %></td>
+        <td><%= building.size %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

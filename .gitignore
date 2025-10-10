@@ -44,4 +44,4 @@
 .keep
 
 # Ignore swp files
-.swp
+**/*.swp
