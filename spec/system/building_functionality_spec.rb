@@ -1,7 +1,7 @@
 require "rails_helper"
 require "csv"
 
-RSpec.describe "Building functionality", type: :system do
+RSpec.describe "建物機能", type: :system do
   include ActiveJob::TestHelper
   before do
     Building.create!(
@@ -21,7 +21,7 @@ RSpec.describe "Building functionality", type: :system do
       size: 120.0
     )
   end
-  it "it displays all current buildings in the database on the index page" do
+  it "インデックスページでデータベース内の全ての現在の建物を表示する" do
     # TODO check for 100+ records being paginated
     visit buildings_path
 
@@ -46,9 +46,9 @@ RSpec.describe "Building functionality", type: :system do
     end
   end
 
-  context "when the CSV file is properly formed" do
-    context "when the CSV file has proper data" do
-      context "when the data shares an unique_ID" do
+  context "CSVファイルが適切に形成されている場合" do
+    context "CSVファイルに適切なデータがある場合" do
+      context "データがユニークIDを共有している場合" do
         before do
           @csv_file = Rails.root.join("spec", "fixtures", "files", "duplicate_ids.csv")
 
@@ -68,7 +68,7 @@ RSpec.describe "Building functionality", type: :system do
           File.delete(@csv_file) if File.exist?(@csv_file)
         end
 
-        it "updates records with the last occurrence of each unique_assigned_id" do
+        it "各ユニークIDの最後の出現でレコードを更新する" do
           visit buildings_path
           click_link "Upload CSV"
           attach_file "csv_file", @csv_file
@@ -103,7 +103,7 @@ RSpec.describe "Building functionality", type: :system do
           end
         end
       end
-      context "when the data doesnt share an unique_ID" do
+      context "データがユニークIDを共有していない場合" do
         before do
           @csv_file = Rails.root.join("spec", "fixtures", "files", "all_new_ids.csv")
           CSV.open(@csv_file, "w") do |csv|
@@ -121,7 +121,7 @@ RSpec.describe "Building functionality", type: :system do
           File.delete(@csv_file) if File.exist?(@csv_file)
         end
 
-        it "creates new records" do
+        it "新しいレコードを作成する" do
           # Get initial count (should be 2 from the before block)
           initial_count = Building.count
           expect(initial_count).to eq(2)
@@ -206,8 +206,8 @@ RSpec.describe "Building functionality", type: :system do
         end
       end
     end
-    context "when the CSV file has bad data" do
-      context "because it has extra info not needed" do
+    context "CSVファイルに不正なデータがある場合" do
+      context "不要な追加情報があるため" do
         before do
           @csv_file = Rails.root.join("spec", "fixtures", "files", "extra_columns.csv")
           CSV.open(@csv_file, "w") do |csv|
@@ -223,7 +223,7 @@ RSpec.describe "Building functionality", type: :system do
           File.delete(@csv_file) if File.exist?(@csv_file)
         end
 
-        it "creates new records" do
+        it "新しいレコードを作成する" do
           visit buildings_path
           click_link "Upload CSV"
           attach_file "csv_file", @csv_file
@@ -288,7 +288,7 @@ RSpec.describe "Building functionality", type: :system do
           expect(Building.count).to eq(6)
         end
       end
-      context "becuase the columns have unexpected names" do
+      context "列が予期しない名前を持っているため" do
         before do
           @csv_file = Rails.root.join("spec", "fixtures", "files", "bad_column_names.csv")
           CSV.open(@csv_file, "w") do |csv|
@@ -304,7 +304,7 @@ RSpec.describe "Building functionality", type: :system do
           File.delete(@csv_file) if File.exist?(@csv_file)
         end
 
-        it "fails and creates no records" do
+        it "レコードを作成しない" do
           # Get initial count
           initial_count = Building.count
           visit buildings_path
@@ -333,7 +333,7 @@ RSpec.describe "Building functionality", type: :system do
           expect(page).to have_text("Test House")
         end
       end
-      context "becuase it is missing important columns" do
+      context "重要な列が欠けているため" do
         before do
           @csv_file = Rails.root.join("spec", "fixtures", "files", "missing_columns.csv")
           CSV.open(@csv_file, "w") do |csv|
@@ -350,7 +350,7 @@ RSpec.describe "Building functionality", type: :system do
           File.delete(@csv_file) if File.exist?(@csv_file)
         end
 
-        it "fails and creates no records" do
+        it "レコードを作成しない" do
           # Get initial count
           initial_count = Building.count
           visit buildings_path
@@ -380,8 +380,8 @@ RSpec.describe "Building functionality", type: :system do
           expect(page).to have_text("Test House")
         end
       end
-      context "because some columns lack data" do # for example, unique_id or structure_type
-        context " its missing some important info like name or unique_id" do
+      context "一部の列にデータがないため" do # 例：unique_idやstructure_type
+        context "名前やユニークIDなどの重要な情報が欠けている" do
           before do
             @csv_file = Rails.root.join("spec", "fixtures", "files", "partial_missing_data.csv")
             CSV.open(@csv_file, "w") do |csv|
@@ -407,7 +407,7 @@ RSpec.describe "Building functionality", type: :system do
             File.delete(@csv_file) if File.exist?(@csv_file)
           end
 
-          it "creates those records that are OK but not those that are missing data" do
+          it "問題ないレコードは作成するが、データが欠けているものは作成しない" do
             # Get initial count
             initial_count = Building.count
             visit buildings_path
@@ -471,7 +471,7 @@ RSpec.describe "Building functionality", type: :system do
             expect(page).to have_text("BLD002")
           end
         end
-        context "because the room number is missing on a structure_type that validates it" do
+        context "部屋番号を検証する建物タイプで部屋番号が欠けているため" do
           before do
             @csv_file = Rails.root.join("spec", "fixtures", "files", "missing_room_numbers.csv")
             CSV.open(@csv_file, "w") do |csv|
@@ -497,7 +497,7 @@ RSpec.describe "Building functionality", type: :system do
             File.delete(@csv_file) if File.exist?(@csv_file)
           end
 
-          it "does not create that record, but creates other records" do
+          it "そのレコードは作成しないが、他のレコードは作成する" do
             # Get initial count
             initial_count = Building.count
             visit buildings_path
@@ -568,7 +568,7 @@ RSpec.describe "Building functionality", type: :system do
     end
   end
 
-  context "when the CSV file is not a CSV file" do
+  context "CSVファイルがCSVファイルでない場合" do
     before do
       @txt_file = Rails.root.join("spec", "fixtures", "files", "not_a_csv.txt")
 
@@ -586,7 +586,7 @@ RSpec.describe "Building functionality", type: :system do
       File.delete(@txt_file) if File.exist?(@txt_file)
     end
 
-    it "does not update any models" do
+    it "モデルを更新しない" do
       # Get initial count
       initial_count = Building.count
 
