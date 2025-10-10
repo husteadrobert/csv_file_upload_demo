@@ -1,5 +1,6 @@
 class BuildingsController < ApplicationController
   def index
+    # TODO Paginate buildings, decide order
     @buildings = Building.all
   end
 
