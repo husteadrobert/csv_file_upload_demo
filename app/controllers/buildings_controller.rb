@@ -1,6 +1,6 @@
 class BuildingsController < ApplicationController
   def index
-    @buildings = Building.all
+    @buildings = Building.order(:unique_assigned_id).page(params[:page]).per(100)
   end
 
   def upload_csv

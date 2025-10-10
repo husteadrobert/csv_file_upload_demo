@@ -2,6 +2,8 @@
 
 <%= link_to "Upload CSV", upload_csv_buildings_path, class: "btn btn-primary" %>
 
+<%= paginate @buildings %>
+
 <table>
   <thead>
     <tr>
@@ -9,6 +11,7 @@
       <th>Name</th>
       <th>Address</th>
       <th>Type</th>
+      <th>Rent</th>
       <th>Room Number</th>
       <th>Size</th>
     </tr>
@@ -20,9 +23,12 @@
         <td><%= building.name %></td>
         <td><%= building.address %></td>
         <td><%= building.structure_type %></td>
+        <td><%= building.rent_amount %></td>
         <td><%= building.room_number %></td>
         <td><%= building.size %></td>
       </tr>
     <% end %>
   </tbody>
 </table>
+
+<%= paginate @buildings %>

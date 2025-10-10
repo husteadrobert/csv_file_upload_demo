@@ -16,14 +16,8 @@ class Building < ApplicationRecord
   private
 
   def room_number_presence_based_on_structure_type
-    if structure_type == TYPE_HOUSE
-      if room_number.present?
-        errors.add(:room_number, 'should be blank for 一戸建て')
-      end
-    else
-      if room_number.blank?
-        errors.add(:room_number, 'must be present for アパート and マンション')
-      end
+    if structure_type != TYPE_HOUSE && room_number.blank?
+      errors.add(:room_number, 'must be present for アパート and マンション')
     end
   end
 end
